@@ -53,7 +53,7 @@
 			<h3>{{ $t('calendar', 'Select slot') }}</h3>
 
 			<div class="booking__slots">
-				<div v-if="loadingSlots" class="icon icon-loading" />
+				<Loading v-if="loadingSlots" :size="24" />
 				<div v-else-if="slots.length === 0 && !loadingSlots">
 					{{ $t('calendar', 'No slots available') }}
 				</div>
@@ -87,6 +87,7 @@ import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import jstz from 'jstz'
 import TimezonePicker from '@nextcloud/vue/dist/Components/TimezonePicker'
+import MDILoading from 'vue-material-design-icons/Loading.vue'
 import { showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/styles/toast.scss'
 
@@ -94,6 +95,17 @@ import AppointmentSlot from '../../components/Appointments/AppointmentSlot'
 import { bookSlot, findSlots } from '../../services/appointmentService'
 import AppointmentDetails from '../../components/Appointments/AppointmentDetails'
 import AppointmentBookingConfirmation from '../../components/Appointments/AppointmentBookingConfirmation'
+
+const Loading = {
+	functional: true,
+	render(h, { data, props }) {
+		return h(MDILoading, {
+			data,
+			staticClass: 'animation-rotate',
+			props,
+		})
+	},
+}
 
 export default {
 	name: 'Booking',
@@ -104,6 +116,7 @@ export default {
 		TimezonePicker,
 		AppointmentDetails,
 		AppointmentBookingConfirmation,
+		Loading,
 	},
 	props: {
 		config: {
@@ -257,6 +270,10 @@ export default {
 	&__date-selection,
 	&__slot-selection {
 		flex-grow: 2;
+	}
+
+  &__slot-selection .material-design-icon.loading-icon.animation-rotate {
+		animation: rotate var(--animation-duration, 0.8s) linear infinite;
 	}
 
 	&__time-zone {
