@@ -53,7 +53,8 @@
 			<h3>{{ $t('calendar', 'Select slot') }}</h3>
 
 			<div class="booking__slots">
-				<div v-if="slots.length === 0 && !loadingSlots">
+				<div v-if="loadingSlots" class="icon icon-loading" />
+				<div v-else-if="slots.length === 0 && !loadingSlots">
 					{{ $t('calendar', 'No slots available') }}
 				</div>
 				<template v-else>
@@ -86,6 +87,8 @@ import Avatar from '@nextcloud/vue/dist/Components/Avatar'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import jstz from 'jstz'
 import TimezonePicker from '@nextcloud/vue/dist/Components/TimezonePicker'
+import { showError } from '@nextcloud/dialogs'
+import '@nextcloud/dialogs/styles/toast.scss'
 
 import AppointmentSlot from '../../components/Appointments/AppointmentSlot'
 import { bookSlot, findSlots } from '../../services/appointmentService'
@@ -162,7 +165,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * Whether or not the date is acceptable
+		 * Whether the date is acceptable
 		 *
 		 * @param {Date} date The date to compare to
 		 * @return {boolean}
@@ -171,11 +174,7 @@ export default {
 			if (date <= this.minimumDate) {
 				return true
 			}
-			if (this.endDate && this.endDate < date) {
-				return true
-			}
-
-			return false
+			return this.endDate && this.endDate < date
 		},
 		async fetchSlots() {
 			this.slots = []
@@ -190,7 +189,7 @@ export default {
 					this.timeZone,
 				)
 			} catch (e) {
-				// TODO error toast
+				showError(this.$t('calendar', 'Could not fetch slots'))
 				console.error('Could not fetch slots', e)
 			} finally {
 				this.loadingSlots = false
