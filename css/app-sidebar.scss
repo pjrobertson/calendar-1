@@ -851,3 +851,9 @@
 	align-items: center;
 	margin-top: 20px;
 }
+
+.invitees-list-button-group {
+	> button.button-vue {  
+		width: calc(50% - 5px);
+	}
+}
