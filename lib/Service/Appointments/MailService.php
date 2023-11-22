@@ -275,12 +275,12 @@ class MailService {
 			throw new ServiceException('Could not find organizer');
 		}
 
-		$fromName = $user->getDisplayName();
+		$toName = $user->getDisplayName(); 
 
 		$sys = $this->getSysEmail();
 		$message = $this->mailer->createMessage()
-			->setFrom([$sys => $fromName])
-			->setTo([$user->getEMailAddress() => $booking->getDisplayName()]);
+			->setFrom([$sys => $booking->getDisplayName()]) // Show the name of the user who booked the appointment as the sender
+			->setTo([$user->getEMailAddress() => $toName]); // Show the name of the appointment organizer as the recipient
 
 
 		$template = $this->mailer->createEMailTemplate('calendar.confirmOrganizer');
